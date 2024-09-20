@@ -8,95 +8,97 @@ int? result = null;
 
 void selectOption()
 {
-  string? selectedOperation = Console.ReadLine();
-  while (selectedOperation != null)
-  {
-    switch (selectedOperation)
+    string? selectedOperation = Console.ReadLine();
+    while (selectedOperation != null)
     {
-      case "1":
-        calculation = createCalculation("+");
-        selectedOperation = null;
-        break;
-      case "2":
-        calculation = createCalculation("-");
-        selectedOperation = null;
-        break;
-      case "3":
-        calculation = createCalculation("*");
-        selectedOperation = null;
-        break;
-      case "4":
-        calculation = createCalculation("/");
-        selectedOperation = null;
-        break;
-      default:
-        Console.WriteLine("Incorrect, please select a valid option.");
-        break;
+        switch (selectedOperation)
+        {
+            case "1":
+                calculation = createCalculation("+");
+                selectedOperation = null;
+                break;
+            case "2":
+                calculation = createCalculation("-");
+                selectedOperation = null;
+                break;
+            case "3":
+                calculation = createCalculation("*");
+                selectedOperation = null;
+                break;
+            case "4":
+                calculation = createCalculation("/");
+                selectedOperation = null;
+                break;
+            default:
+                Console.WriteLine("Incorrect, please select a valid option.");
+                break;
+        }
     }
-  }
 }
-
 
 void checkAnswer()
 {
-  Console.WriteLine($"Please resolve: {calculation}, and enter your answer.");
+    Console.WriteLine($"Please resolve: {calculation}, and enter your answer.");
 
-  string? userAnswer = Console.ReadLine();
-  while (userAnswer != null)
-  {
-    if (int.Parse(userAnswer) == result)
+    string? userAnswer = Console.ReadLine();
+    while (userAnswer != null)
     {
-      Console.WriteLine($"Congratulations! Your answer ${userAnswer} is correct.");
+        if (int.Parse(userAnswer) == result)
+        {
+            Console.WriteLine($"Congratulations! Your answer {userAnswer} is correct.");
+        }
+        else
+        {
+            Console.WriteLine($"Wrong! Result was: {result}.");
+        }
+        userAnswer = null;
     }
-    else
-    {
-      Console.WriteLine($"Wrong! Result was: {result}.");
-    }
-    userAnswer = null;
-  }
 }
 
+int[] generateRandomNumbers()
+{
+    Random random = new();
+    int number1 = random.Next(1, 100);
+    int number2 = random.Next(1, 100);
+    return [number1, number2];
+}
 
 string createCalculation(string operation)
 {
-  Random random = new Random();
-  int number1 = random.Next(1, 100);
-  int number2 = random.Next(1, 100);
-  createSolution(number1, number2, operation);
-  return $"{number1} {operation} {number2}";
+    int[] numbers = generateRandomNumbers();
+    if (operation == "/")
+    {
+        double result = numbers[0] % numbers[1];
+        while (result != 0)
+        {
+            numbers = generateRandomNumbers();
+            result = numbers[0] % numbers[1];
+        }
+    }
+    createSolution(numbers[0], numbers[1], operation);
+    return $"{numbers[0]} {operation} {numbers[1]}";
 }
 
 void createSolution(int number1, int number2, string operation)
 {
-  if (operation == "+")
-  {
-    result = number1 + number2;
-  }
-  else if (operation == "-")
-  {
-    result = number1 - number2;
-  }
-  else if (operation == "*")
-  {
-    result = number1 * number2;
-  }
-  else if (operation == "/")
-  {
-    if (number1 < number2)
+    if (operation == "+")
     {
-      result = number2 / number1;
-
+        result = number1 + number2;
     }
+    else if (operation == "-")
+    {
+        result = number1 - number2;
+    }
+    else if (operation == "*")
+    {
+        result = number1 * number2;
+    }
+    else if (operation == "/")
+        result = number1 / number2;
     else
     {
-      result = number1 / number2;
-
+        result = null;
     }
-  }
-  else
-  {
-    result = null;
-  }
 }
 
 selectOption();
