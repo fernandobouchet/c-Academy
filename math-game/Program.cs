@@ -1,37 +1,66 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 
-Console.WriteLine("Please choose an operation:");
-Console.WriteLine("1) Addition\n2) Substraction\n3) Multiplication\n4) Division");
+string? option = "";
 string? calculation = null;
 int? result = null;
+int[] history = [];
+
+Console.WriteLine("Please choose an option:");
+Console.WriteLine("1) Choose a random \n2) View history \n3) Exit");
+option = Console.ReadLine();
+
+while (option != null)
+{
+    if (option == "1")
+    {
+        selectOption();
+        checkAnswer();
+    }
+    else if (option == "2")
+    {
+        showHistory();
+        Console.WriteLine("5) Menu.");
+        option = Console.ReadLine();
+    }
+    else if (option == "5")
+    {
+        Console.WriteLine("Please choose an option:");
+        Console.WriteLine("1) Choose a random \n2) View history \n3) Exit");
+        option = Console.ReadLine();
+    }
+    else
+    {
+        option = null;
+        return;
+    }
+}
 
 void selectOption()
 {
+    Console.WriteLine("Please choose an operation:");
+    Console.WriteLine(
+        "1) Addition\n2) Substraction\n3) Multiplication\n4) Division\n Press any other key to go back."
+    );
     string? selectedOperation = Console.ReadLine();
+    var operations = new Dictionary<int, string>
+    {
+        { 1, "+" },
+        { 2, "-" },
+        { 3, "*" },
+        { 4, "/" },
+    };
     while (selectedOperation != null)
     {
-        switch (selectedOperation)
+        bool op = int.TryParse(selectedOperation, out int selectedOptionOperation);
+        if (op && selectedOptionOperation >= 1 && selectedOptionOperation <= 4)
         {
-            case "1":
-                calculation = createCalculation("+");
-                selectedOperation = null;
-                break;
-            case "2":
-                calculation = createCalculation("-");
-                selectedOperation = null;
-                break;
-            case "3":
-                calculation = createCalculation("*");
-                selectedOperation = null;
-                break;
-            case "4":
-                calculation = createCalculation("/");
-                selectedOperation = null;
-                break;
-            default:
-                Console.WriteLine("Incorrect, please select a valid option.");
-                break;
+            calculation = createCalculation(operations[selectedOptionOperation]);
+            selectedOperation = null;
+        }
+        else
+        {
+            selectedOperation = null;
         }
     }
 }
@@ -101,5 +130,18 @@ void createSolution(int number1, int number2, string operation)
     }
 }
 
-selectOption();
-checkAnswer();
+void showHistory()
+{
+    if (history.Length > 0)
+    {
+        foreach (var item in history)
+        {
+            Console.WriteLine($"{item}\n");
+        }
+    }
+    else
+    {
+        Console.WriteLine("History is empty");
+    }
+    ;
+}
