@@ -4,10 +4,10 @@
 string? option = "";
 string? calculation = null;
 int? result = null;
-int[] history = [];
+List<string> history = [];
 
 Console.WriteLine("Please choose an option:");
-Console.WriteLine("1) Choose a random \n2) View history \n3) Exit");
+Console.WriteLine("1) Choose a calculation to solve \n2) View history \n3) Exit");
 option = Console.ReadLine();
 
 while (option != null)
@@ -26,23 +26,23 @@ while (option != null)
     else if (option == "5")
     {
         Console.WriteLine("Please choose an option:");
-        Console.WriteLine("1) Choose a random \n2) View history \n3) Exit");
+        Console.WriteLine("1) Choose a calculation to solve \n2) View history \n3) Exit");
         option = Console.ReadLine();
     }
     else
     {
-        option = null;
         return;
     }
 }
 
 void selectOption()
 {
-    Console.WriteLine("Please choose an operation:");
+    Console.WriteLine("Please select a calculation:");
     Console.WriteLine(
         "1) Addition\n2) Substraction\n3) Multiplication\n4) Division\n Press any other key to go back."
     );
     string? selectedOperation = Console.ReadLine();
+
     var operations = new Dictionary<int, string>
     {
         { 1, "+" },
@@ -50,29 +50,30 @@ void selectOption()
         { 3, "*" },
         { 4, "/" },
     };
-    while (selectedOperation != null)
+
+    bool op = int.TryParse(selectedOperation, out int selectedOptionOperation);
+    if (op && selectedOptionOperation >= 1 && selectedOptionOperation <= 4)
     {
-        bool op = int.TryParse(selectedOperation, out int selectedOptionOperation);
-        if (op && selectedOptionOperation >= 1 && selectedOptionOperation <= 4)
-        {
-            calculation = createCalculation(operations[selectedOptionOperation]);
-            selectedOperation = null;
-        }
-        else
-        {
-            selectedOperation = null;
-        }
+        calculation = createCalculation(operations[selectedOptionOperation]);
+    }
+    else
+    {
+        option = "5";
     }
 }
 
 void checkAnswer()
 {
+    if (option != "1")
+        return;
+
     Console.WriteLine($"Please resolve: {calculation}, and enter your answer.");
 
     string? userAnswer = Console.ReadLine();
     while (userAnswer != null)
     {
-        if (int.Parse(userAnswer) == result)
+        bool stringIsInt = int.TryParse(userAnswer, out int userAnswerOperation);
+        if (stringIsInt && userAnswerOperation == result)
         {
             Console.WriteLine($"Congratulations! Your answer {userAnswer} is correct.");
         }
@@ -80,6 +81,8 @@ void checkAnswer()
         {
             Console.WriteLine($"Wrong! Result was: {result}.");
         }
+        history.Add($"{calculation} = {userAnswer}");
+        calculation = null;
         userAnswer = null;
     }
 }
@@ -132,7 +135,7 @@ void createSolution(int number1, int number2, string operation)
 
 void showHistory()
 {
-    if (history.Length > 0)
+    if (history.Count > 0)
     {
         foreach (var item in history)
         {
